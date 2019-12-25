@@ -1,0 +1,7 @@
+- name: deploy serverless application
+  serverless:
+   service_path: '{{ project_dir }}'
+   stage: dev
+   state: present
+    
+  

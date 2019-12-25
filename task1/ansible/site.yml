@@ -1,0 +1,11 @@
+---
+- hosts : docker
+  sudo: yes  
+  vars:
+   src_path: /home/ubuntu/bitwala/task1/
+   dest_path: /tmp
+
+  roles:
+    - hello-world-task
+
+

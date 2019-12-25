@@ -1,0 +1,83 @@
+ - name: Install aptitude using apt
+   apt: name=aptitude state=latest update_cache=yes force_apt_get=yes
+
+ - name: Install required system packages
+   apt:
+    name: "{{ item }}"
+    update_cache: yes
+   with_items:
+      - "aptitude"
+      - "apt-transport-https"
+      - "ca-certificates"
+      - "curl"
+      - "software-properties-common"
+
+ - name: Add Docker GPG apt Key
+   apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+ - name: Add Docker Repository
+   apt_repository:
+    repo: deb https://download.docker.com/linux/ubuntu bionic stable
+    filename: docker
+    state: present
+
+ - name: Update apt and install docker-ce
+   apt: 
+    update_cache=yes 
+    name=docker-ce
+
+ - name: Install Docker Module for Python
+   pip:
+    name: docker
+
+ - name: create destination directory
+   file:
+    path: "{{ dest_path }}/files"
+    state: directory
+    recurse: yes
+
+
+ - name: copy configs and docker file
+   copy:
+    src:  "{{ src_path }}/{{ item }}"
+    dest:  "{{ dest_path }}"
+   with_items:
+      - "Dockerfile"
+      - "configs/requirement.txt"
+      - "configs/uwsgi.ini"
+      - "configs/nginx.conf"
+      - "configs/supervisord.conf"
+      - "configs/flask-site-nginx.conf"
+      - "certs/nginx-selfsigned.crt"
+      - "certs/nginx-selfsigned.key"
+      - "configs/ssl-params.conf"
+      - "configs/self-signed.conf"  
+      - "certs/dhparam.pem"
+ - name: copy app to host
+   copy:
+    src: "{{ src_path }}/flaskapp/"
+    dest: "{{ dest_path }}/files/"
+
+ - name: change to destination directory
+   shell : cd {{ dest_path }}
+
+ - name: build docker image
+   docker_image:
+    path: "{{ dest_path }}"
+    name: flask-app-image
+    tag: 0.1
+    state: present
+    force: yes
+
+ - name: create container
+   docker_container:
+    name: flask-app
+    image: flask-app-image:0.1
+    ports:
+     - "80:80"
+     - "443:443"
+    detach: yes
+    restart_policy: "always"
+    
