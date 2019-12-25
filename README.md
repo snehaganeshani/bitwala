@@ -31,8 +31,16 @@ In this task I have used Ansible and Docker to deploy flask app which is accessi
 #Task2
 
 In this you will create lambda and SNS topic using ansible and serverless
-
-Run ansible-playbook lambda.yml , this playbook will:
+ 
+1. Prequisite:
+   Run below commands to install node, npm and serverless
+      sudo apt-get update
+      sudo apt-get install nodejs
+      sudo apt-get install npm
+      npm install -g serverless
+      Finnay create project serverless create --template aws-python3 --path ~/bitwala/task2/serverless-task
+      
+2.Run ansible-playbook lambda.yml , this playbook will:
 
   a. Run serverless module on local machine on which ansible is installed.
   
