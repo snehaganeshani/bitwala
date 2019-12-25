@@ -25,7 +25,7 @@ In this task I have used Ansible and Docker to deploy flask app which is accessi
 
 3.Container is finally deployed, you can check your app using :
   
-  Https://<public ip of your machine>:443
+  Https://public ip of your machine:443
 
 
 #Task2
